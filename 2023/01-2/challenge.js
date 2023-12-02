@@ -61,8 +61,6 @@ function doChallenge(input) {
 			}
 		}
 
-	console.log("Number: ", `${first}${last}`);
-
 		result += +(`${first}${last}`);
 	}
 
