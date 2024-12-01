@@ -40,6 +40,11 @@ func main() {
 		}
 	}
 
+	firstStar(arr1, arr2)
+	secondStar(arr1, arr2)
+}
+
+func firstStar(arr1, arr2 []int) {
 	sum := 0
 	for i := 0; i < len(arr1); i++ {
 		if arr1[i] >= arr2[i] {
@@ -48,7 +53,18 @@ func main() {
 			sum += arr2[i] - arr1[i]
 		}
 	}
-	fmt.Println(sum)
+	fmt.Println("first star:", sum)
+}
+
+func secondStar(arr1, arr2 []int) {
+	sum := 0
+	pos := 0
+	for i := 0; i < len(arr1); i++ {
+		finded, newPos := findEqualNumber(arr1, arr2[i], pos)
+		pos = newPos
+		sum += finded * arr2[i]
+	}
+	fmt.Println("second star:", sum)
 }
 
 func findPos(arr []int, num int) int {
@@ -58,4 +74,23 @@ func findPos(arr []int, num int) int {
 		}
 	}
 	return -1
+}
+
+func findEqualNumber(arr []int, num int, startPos int) (int, int) {
+	finded := 0
+	pos := startPos
+	posIsChanged := false
+	for i := startPos; i < len(arr); i++ {
+		if arr[i] > num {
+			break
+		}
+		if arr[i] == num {
+			finded++
+			if !posIsChanged {
+				pos = i
+				posIsChanged = true
+			}
+		}
+	}
+	return finded, pos
 }
