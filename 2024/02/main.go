@@ -34,6 +34,7 @@ func main() {
 	}
 
 	fmt.Println("first star:", numSafeFirst)
+	fmt.Println("second star:", numSafeSecond)
 }
 
 func isSafe(diff int, isIncreasing bool) bool {
@@ -55,6 +56,68 @@ func firstStar(parts []string) bool {
 		curr, _ := strconv.Atoi(parts[i])
 		diff := curr - prev
 		if i == 1 {
+			isIncreasing = diff > 0
+		}
+		if !isSafe(diff, isIncreasing) {
+			safe = false
+			break
+		}
+		prev = curr
+	}
+	return safe
+}
+
+func secondStar(parts []string) bool {
+	prev, _ := strconv.Atoi(parts[0])
+	safe := true
+	var isIncreasing bool
+	for i := 1; i < len(parts); i++ {
+		curr, _ := strconv.Atoi(parts[i])
+		diff := curr - prev
+		if i == 1 {
+			isIncreasing = diff > 0
+		}
+		if !isSafe(diff, isIncreasing) {
+			safe = false
+			break
+		}
+		prev = curr
+	}
+
+	if !safe {
+		for i := 0; i < len(parts); i++ {
+			safe = secondStarTryAgain(parts, i)
+			if safe {
+				break
+			}
+		}
+	}
+
+	return safe
+}
+
+func secondStarTryAgain(parts []string, firstUnsafePos int) bool {
+	var start int
+	var prev int
+	var isIncreasing bool
+	if firstUnsafePos == 0 {
+		prev, _ = strconv.Atoi(parts[1])
+		start = 2
+	} else {
+		prev, _ = strconv.Atoi(parts[0])
+		start = 1
+	}
+	if start == firstUnsafePos {
+		start++
+	}
+	safe := true
+	for i := start; i < len(parts); i++ {
+		if i == firstUnsafePos {
+			continue
+		}
+		curr, _ := strconv.Atoi(parts[i])
+		diff := curr - prev
+		if i == start {
 			isIncreasing = diff > 0
 		}
 		if !isSafe(diff, isIncreasing) {
