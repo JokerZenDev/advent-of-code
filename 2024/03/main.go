@@ -54,3 +54,18 @@ func parseMul(s string, sum *int) {
 		}
 	}
 }
+
+func secondStar(input string) int {
+	sum := 0
+
+	dontMatches := strings.Split(input, "don't()")
+	parseMul(dontMatches[0], &sum)
+	for i := 1; i < len(dontMatches); i++ { // Start at 1 to skip first split
+		doMatches := strings.Split(dontMatches[i], "do()")
+		for j := 1; j < len(doMatches); j++ { // Start at 1 to skip first split
+			parseMul(doMatches[j], &sum)
+		}
+	}
+
+	return sum
+}
