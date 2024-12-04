@@ -14,6 +14,8 @@ func main() {
 	}
 
 	fmt.Println("first star:", firstStar(string(input)))
+	fmt.Println("second star:", secondStar(string(input)))
+}
 
 func firstStar(input string) int {
 	sum := 0
@@ -53,4 +55,30 @@ func checkLines(lines []string, sum *int) {
 			}
 		}
 	}
+}
+
+func secondStar(input string) int {
+	sum := 0
+
+	lines := strings.Split(input, "\n")
+
+	for c := 1; c < len(lines)-1; c++ {
+		line := lines[c]
+		for i := 1; i < len(line)-1; i++ {
+			char := string(line[i])
+			if char == "A" {
+				topLeft := string(lines[c-1][i-1])
+				topRight := string(lines[c-1][i+1])
+				bottomLeft := string(lines[c+1][i-1])
+				bottomRight := string(lines[c+1][i+1])
+				leftToRight := string(topLeft) + string(line[i]) + string(bottomRight)
+				rightToLeft := string(topRight) + string(line[i]) + string(bottomLeft)
+				if (leftToRight == "MAS" || leftToRight == "SAM") && (rightToLeft == "MAS" || rightToLeft == "SAM") {
+					sum++
+				}
+			}
+		}
+	}
+
+	return sum
 }
