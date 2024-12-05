@@ -17,6 +17,7 @@ func main() {
 	numbers, count := createRules(lines)
 
 	fmt.Println("first star:", firstStar(lines, numbers, count))
+	fmt.Println("second star:", secondStar(lines, numbers, count))
 }
 
 func createRules(lines []string) (map[int][]int, int) {
@@ -79,6 +80,57 @@ func firstStar(lines []string, numbers map[int][]int, count int) int {
 			appArr = append(appArr, num)
 		}
 		if !found {
+			sum += appArr[int(len(appArr))/2]
+		}
+	}
+	return sum
+}
+
+func findPos(arr []int, value int) int {
+	for i, v := range arr {
+		if v == value {
+			return i
+		}
+	}
+	return -1
+}
+
+func secondStar(lines []string, numbers map[int][]int, count int) int {
+	sum := 0
+	for i := count + 1; i < len(lines); i++ {
+		nums := strings.Split(lines[i], ",")
+		found := false
+		appArr := []int{}
+		num0, err := strconv.Atoi(nums[0])
+		if err != nil {
+			continue
+		}
+		appArr = append(appArr, num0)
+		for c := 1; c < len(nums); c++ {
+			num, err := strconv.Atoi(nums[c])
+			if err != nil {
+				continue
+			}
+
+			pos := -1
+			for _, n := range numbers[num] {
+				newPos := findPos(appArr, n)
+				if newPos != -1 && (pos == -1 || newPos < pos) {
+					pos = newPos
+					found = true
+				}
+			}
+			if pos == -1 {
+				appArr = append(appArr, num)
+			} else {
+				newArr := []int{}
+				newArr = append(newArr, appArr[:pos]...)
+				newArr = append(newArr, num)
+				newArr = append(newArr, appArr[pos:]...)
+				appArr = newArr
+			}
+		}
+		if found {
 			sum += appArr[int(len(appArr))/2]
 		}
 	}
