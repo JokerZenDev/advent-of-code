@@ -24,6 +24,7 @@ func main() {
 	}
 
 	fmt.Println("first star:", firstStar(numbersInt))
+	fmt.Println("second star:", secondStar(numbersInt))
 }
 
 func firstStar(numbers []int) int {
@@ -83,4 +84,69 @@ func checksum(disk []int) int {
 		}
 	}
 	return sum
+}
+
+func secondStar(numbers []int) int {
+	disk := createDisk(numbers)
+	disk = compactDisk(disk)
+	sum := checksum(disk)
+
+	return sum
+}
+
+func compactDisk(disk []int) []int {
+	pos := -1
+	fileLength := 0
+	filesMoved := []int{}
+	for i := len(disk) - 1; i >= 0; i-- {
+		if fileLength > 0 && disk[pos] != disk[i] {
+			filesMoved = append(filesMoved, disk[pos])
+			disk = moveFile(disk, pos, fileLength)
+			pos = -1
+			fileLength = 0
+		}
+		if disk[i] != -1 {
+			alreadyMoved := false
+			for _, file := range filesMoved {
+				if file == disk[i] {
+					alreadyMoved = true
+					break
+				}
+			}
+			if !alreadyMoved {
+				if pos == -1 {
+					pos = i
+				}
+				fileLength++
+			}
+		}
+	}
+	return disk
+}
+
+func moveFile(disk []int, endPos int, fileLength int) []int {
+	startPos := endPos - fileLength + 1
+	freeStartPos := -1
+	freeLength := 0
+	file := disk[endPos]
+	for i := 0; i < startPos; i++ {
+		if disk[i] == -1 {
+			if freeStartPos == -1 {
+				freeStartPos = i
+			}
+			freeLength++
+		} else {
+			if freeLength >= fileLength {
+				for j := 0; j < fileLength; j++ {
+					disk[freeStartPos+j] = file
+					disk[startPos+j] = -1
+				}
+				break
+			}
+
+			freeStartPos = -1
+			freeLength = 0
+		}
+	}
+	return disk
 }
