@@ -18,6 +18,7 @@ func main() {
 	hikingMap := createMap(lines)
 
 	fmt.Println("first star:", firstStar(hikingMap))
+	fmt.Println("second star:", secondStar(hikingMap))
 }
 
 func createMap(lines []string) [][]int {
@@ -112,4 +113,44 @@ func isIn(endFound [][2]int, y int, x int) bool {
 		}
 	}
 	return false
+}
+
+func secondStar(hikingMap [][]int) int {
+	sum := 0
+
+	for y := 0; y < len(hikingMap); y++ {
+		for x := 0; x < len(hikingMap[y]); x++ {
+			if hikingMap[y][x] == 0 {
+				sum += startWalking2(hikingMap, y, x)
+			}
+		}
+	}
+
+	return sum
+}
+func startWalking2(hikingMap [][]int, y int, x int) int {
+	if hikingMap[y][x] == 9 {
+		return 1
+	}
+
+	sum := 0
+	next := hikingMap[y][x] + 1
+
+	if y > 0 && hikingMap[y-1][x] == next {
+		// walk up
+		sum += startWalking2(hikingMap, y-1, x)
+	}
+	if y < len(hikingMap)-1 && hikingMap[y+1][x] == next {
+		// walk down
+		sum += startWalking2(hikingMap, y+1, x)
+	}
+	if x > 0 && hikingMap[y][x-1] == next {
+		// walk left
+		sum += startWalking2(hikingMap, y, x-1)
+	}
+	if x < len(hikingMap[y])-1 && hikingMap[y][x+1] == next {
+		// walk right
+		sum += startWalking2(hikingMap, y, x+1)
+	}
+	return sum
 }
